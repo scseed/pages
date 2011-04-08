@@ -16,18 +16,21 @@ class Model_Page extends Jelly_Model_MPTT {
 	 */
 	public static function initialize(Jelly_Meta $meta)
 	{
-		$meta->table('pages')
+		$meta->table('_pages')
 			->name_key('alias')
 			->fields(array(
 				'id' => Jelly::field('Primary'),
 				'parent' => Jelly::field('BelongsTo', array(
 					'foreign' => 'page',
-					'column' => 'parent_id'
+					'column' => 'parent_id',
+					'default' => NULL,
+					'allow_null' => TRUE,
+					'convert_empty' => TRUE,
 				)),
 				'alias' => Jelly::field('String', array(
-					'rules' => array(
-						'not_empty' => array(NULL),
-					),
+					'default' => NULL,
+					'allow_null' => TRUE,
+					'convert_empty' => TRUE,
 				)),
 				'date_create' => Jelly::field('Timestamp', array(
 					'default' => time(),

@@ -28,7 +28,7 @@ class Controller_Page extends Controller_Template {
 		$page_view = ($this->_ajax) ? 'home/page' : 'page';
 
 		$this->template->title      = $page->title;
-		$this->template->page_title = $page->long_title;
+		$this->template->page_title = ($page->long_title) ? $page->long_title : $page->title;
 		$this->template->content    = View::factory('frontend/content/' . $page_view)
 			->bind('page', $page);
 	}

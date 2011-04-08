@@ -1,7 +1,22 @@
 -- -----------------------------------------------------
+-- Table `system_languages`
+-- -----------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `system_languages` (
+  `id` tinyint(2) unsigned NOT NULL AUTO_INCREMENT,
+  `abbr` char(20) NOT NULL,
+  `english_name` varchar(128) NOT NULL,
+  `locale_name` varchar(128) NOT NULL,
+  `is_active` tinyint(1) unsigned NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`) )
+ENGINE=InnoDB
+DEFAULT CHARSET=utf8
+COMMENT='System languages';
+
+-- -----------------------------------------------------
 -- Table `pages`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `pages` (
+CREATE  TABLE IF NOT EXISTS `_pages` (
   `id` SMALLINT(5) UNSIGNED NOT NULL AUTO_INCREMENT ,
   `parent_id` SMALLINT(5) UNSIGNED NULL DEFAULT NULL ,
   `alias` VARCHAR(64) NOT NULL ,
@@ -38,17 +53,15 @@ CREATE  TABLE IF NOT EXISTS `page_content` (
   `long_title` VARCHAR(256) NULL DEFAULT NULL ,
   `content` TEXT NOT NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `fk_content_page` (`page_id` ASC) ,
-  INDEX `fk_content_system-language` (`lang_id` ASC) ,
   INDEX `fk_page-content_page` (`page_id` ASC) ,
-  INDEX `fk_page-content_lang` (`lang_id` ASC) ,
+  INDEX `fk_page-content_system-language` (`lang_id` ASC) ,
   INDEX `fk_page-content_type` (`type_id` ASC) ,
   CONSTRAINT `fk_page-content_page`
     FOREIGN KEY (`page_id` )
-    REFERENCES `pages` (`id` )
+    REFERENCES `_pages` (`id` )
     ON DELETE CASCADE
     ON UPDATE CASCADE,
-  CONSTRAINT `fk_page-content_lang`
+  CONSTRAINT `fk_page-content_system-language`
     FOREIGN KEY (`lang_id` )
     REFERENCES `system_languages` (`id` )
     ON DELETE RESTRICT
