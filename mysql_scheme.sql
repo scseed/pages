@@ -16,7 +16,7 @@ COMMENT='System languages';
 -- -----------------------------------------------------
 -- Table `pages`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `_pages` (
+CREATE  TABLE IF NOT EXISTS `pages` (
   `id` SMALLINT(5) UNSIGNED NOT NULL AUTO_INCREMENT ,
   `parent_id` SMALLINT(5) UNSIGNED NULL DEFAULT NULL ,
   `alias` VARCHAR(64) NOT NULL ,
@@ -58,7 +58,7 @@ CREATE  TABLE IF NOT EXISTS `page_content` (
   INDEX `fk_page-content_type` (`type_id` ASC) ,
   CONSTRAINT `fk_page-content_page`
     FOREIGN KEY (`page_id` )
-    REFERENCES `_pages` (`id` )
+    REFERENCES `pages` (`id` )
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_page-content_system-language`

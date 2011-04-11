@@ -16,7 +16,7 @@ class Model_Page extends Jelly_Model_MPTT {
 	 */
 	public static function initialize(Jelly_Meta $meta)
 	{
-		$meta->table('_pages')
+		$meta->table('pages')
 			->name_key('alias')
 			->fields(array(
 				'id' => Jelly::field('Primary'),
