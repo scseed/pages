@@ -78,4 +78,25 @@ class Controller_Page extends Controller_Template {
 
 		parent::after();
 	}
+
+	public static function langs()
+	{
+		$config = Kohana::config('pages');
+
+		$langs = i18n::lang();
+		if($config->multilanguage === TRUE)
+		{
+			// Load language conf
+			$_langs = Jelly::query('system_lang')->active()->select();
+			$langs = array();
+			foreach($_langs as $lang)
+			{
+				$langs[] = $lang->abbr;
+			}
+
+			$langs = ($langs) ? '('.implode('|', $langs).')' : NULL;
+		}
+
+		return $langs;
+	}
 } // End Controller_Page

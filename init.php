@@ -1,20 +1,9 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-$config = Kohana::config('pages');
-
-$langs = i18n::lang();
-if($config->multilanguage === TRUE)
-{
-	// Load language conf
-	$_langs = Jelly::query('system_lang')->active()->select();
-	$langs = array();
-	foreach($_langs as $lang)
-	{
-		$langs[] = $lang->abbr;
-	}
-
-	$langs = ($langs) ? '('.implode('|', $langs).')' : NULL;
-}
+/**
+ * Load language conf
+ */
+$langs = Controller_Page::langs();
 
 // Load top-level pages
 $_pages = Jelly::query('page')->get_grand_pages()->select();
@@ -31,7 +20,7 @@ $static_pages = ($pages) ? '('.implode('|', $pages).')' : '';
 Route::set('page',	'(<lang>)(/)<page_alias>(/<subpages>)', array(
 	'lang'       => $langs,
 	'page_alias' => $static_pages,
-	'subpages'   => '.+'
+	'subpages'   => '.*'
 ))
 ->defaults(array(
 	'controller' => 'page',
