@@ -35,7 +35,7 @@ class Model_Builder_Page extends Jelly_Builder {
 	{
 		return $this
 			->active()
-			->where('parent', '=', 1);
+			->where('parent_page', '=', 1);
 	}
 
 } // End Model_Builder_Page
