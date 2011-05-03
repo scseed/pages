@@ -20,11 +20,12 @@ class Model_Page extends Jelly_Model_MPTT {
 			->name_key('alias')
 			->fields(array(
 				'id' => Jelly::field('Primary'),
-				'parent' => Jelly::field('BelongsTo', array(
-					'foreign' => 'page',
-					'column' => 'parent_id',
-					'default' => NULL,
-					'allow_null' => TRUE,
+				'parent_page' => Jelly::field('BelongsTo', array(
+					'foreign'       => 'page',
+					'column'        => 'parent_id',
+					'model'         => 'page',
+					'default'       => NULL,
+					'allow_null'    => TRUE,
 					'convert_empty' => TRUE,
 				)),
 				'alias' => Jelly::field('String', array(
