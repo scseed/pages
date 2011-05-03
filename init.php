@@ -1,8 +1,11 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-/**
- * Load language conf
- */
+// Load Textile support
+require_once Kohana::find_file('vendor', 'textile'.DIRECTORY_SEPARATOR.'textile');
+$textile = new Textile();
+View::bind_global('textile', $textile);
+
+// Load language conf
 $langs = Controller_Page::langs();
 
 // Load top-level pages
@@ -18,12 +21,12 @@ $static_pages = ($pages) ? '('.implode('|', $pages).')' : '';
 
 // Pages route
 Route::set('page',	'(<lang>)(/)<page_alias>(/<subpages>)', array(
-	'lang'       => $langs,
-	'page_alias' => $static_pages,
-	'subpages'   => '.*'
-))
-->defaults(array(
-	'controller' => 'page',
-	'action'     => 'show',
-	'lang'       => NULL,
+		'lang'       => $langs,
+		'page_alias' => $static_pages,
+		'subpages'   => '.*'
+	))
+	->defaults(array(
+		'controller' => 'page',
+		'action'     => 'show',
+		'lang'       => NULL,
 ));

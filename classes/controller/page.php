@@ -12,7 +12,7 @@ class Controller_Page extends Controller_Template {
 	/**
 	 * Showing static page content by it's alias
 	 *
-	 * @throws Http_Exception_404
+	 * @throws HTTP_Exception_404
 	 * @return void
 	 */
 	public function action_show()
@@ -23,7 +23,7 @@ class Controller_Page extends Controller_Template {
 			$page = $this->_find_page_content('ru');
 
 		if( ! $page->loaded())
-			throw new Http_Exception_404();
+			throw new HTTP_Exception_404();
 
 		$page_view = ($this->_ajax) ? 'home/page' : 'page';
 
@@ -36,7 +36,7 @@ class Controller_Page extends Controller_Template {
 	/**
 	 * Looking for page content.
 	 *
-	 * @throws Http_Exception_404
+	 * @throws HTTP_Exception_404
 	 * @return Jelly_Model
 	 */
 	protected function _find_page_content()
@@ -46,7 +46,7 @@ class Controller_Page extends Controller_Template {
 	    $subpage_aliases = $this->request->param('subpages');
 
 		if($page_alias === NULL)
-			throw new Http_Exception_404();
+			throw new HTTP_Exception_404();
 
 		$page = ($subpage_aliases)
 			? Jelly::query('page_content')
@@ -66,19 +66,11 @@ class Controller_Page extends Controller_Template {
 	}
 
 	/**
-	 * Loading Textile support
+	 * Getting system languages
 	 *
-	 * @return void
+	 * @static
+	 * @return array|null|string
 	 */
-	public function after()
-	{
-		require_once Kohana::find_file('vendor', 'textile' . DIRECTORY_SEPARATOR . 'textile');
-
-		$this->template->content->textile = new Textile();
-
-		parent::after();
-	}
-
 	public static function langs()
 	{
 		$config = Kohana::config('pages');
@@ -99,4 +91,5 @@ class Controller_Page extends Controller_Template {
 
 		return $langs;
 	}
+
 } // End Controller_Page
