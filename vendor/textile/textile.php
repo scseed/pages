@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Example: get XHTML from a given Textile-markup string ($string)
  *
@@ -8,7 +9,7 @@
  */
 
 /*
-$Id: textile.php 216 2006-10-17 22:31:53Z zem $
+$Id: classTextile.php 216 2006-10-17 22:31:53Z zem $
 $LastChangedRevision: 216 $
 */
 
@@ -463,11 +464,16 @@ class Textile
 
 // -------------------------------------------------------------
     function fList($m)
-    {
-        $text = explode("\n", $m[0]);
-        foreach($text as $line) {
-            $nextline = next($text);
-            if (preg_match("/^([#*]+)($this->a$this->c) (.*)$/s", $line, $m)) {
+	 {
+		$text = explode("\n", $m[0]);
+		$i=0;
+		$nbrline=count($text);
+		while($i<$nbrline) {
+			$line=$text[$i];
+			$i++;
+			if($i==$nbrline) $nextline='';
+			else $nextline=$text[$i];
+			if (preg_match("/^([#*]+)($this->a$this->c) (.*)$/s", $line, $m)) {
                 list(, $tl, $atts, $content) = $m;
                 $nl = '';
                 if (preg_match("/^([#*]+)\s.*/", $nextline, $nm))
