@@ -38,12 +38,4 @@ class Model_Builder_Page extends Jelly_Builder {
 			->where('parent_page', '=', 1);
 	}
 
-	public function get_page_content($lang, $alias)
-	{
-		return $this
-			->where('page_content:lang.abbr', '=', $lang)
-			->where('page_content:page.alias', '=', $alias)
-			->limit(1);
-	}
-
 } // End Model_Builder_Page
