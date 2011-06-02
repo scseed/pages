@@ -43,7 +43,9 @@ class Model_Page extends Jelly_Model_MPTT {
 					'label_false' => 'нет'
 				)),
 				'page_contents' => Jelly::field('HasMany'),
-			));
+			))
+			->load_with(array('parent_page'))
+		;
 
 		parent::initialize($meta);
 	}

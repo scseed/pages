@@ -32,6 +32,11 @@ class Model_Page_Content extends Jelly_Model {
 				'title' => Jelly::field('String'),
 				'long_title' => Jelly::field('String'),
 				'content' => Jelly::field('Text'),
+			))
+			->load_with(array(
+				'page',
+				'type',
+				'lang',
 			));
 	}
 } // End Model_Page_Content

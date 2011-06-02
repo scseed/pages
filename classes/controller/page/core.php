@@ -53,12 +53,7 @@ abstract class Controller_Page_Core extends Controller_Template {
 
 		$alias = ($subpage_aliases) ?  $page_alias.'/'.$subpage_aliases : $page_alias;
 
-		$page = Jelly::query('page_content')
-				->with('lang')
-				->with('page')
-				->where('page_content:lang.abbr', '=', $lang)
-				->where('page_content:page.alias', '=', $alias)
-				->limit(1)->select();
+		$page = Jelly::query('page_content')->get_page_content($lang, $alias)->select();
 
 		return $page;
 	}
