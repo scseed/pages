@@ -21,10 +21,6 @@ class Model_Page_Content extends Jelly_Model {
 				'page' => Jelly::field('BelongsTo', array(
 					'allow_null' => TRUE
 				)),
-				'type' => Jelly::field('BelongsTo', array(
-					'foreign' => 'page_content_type',
-					'model' => 'page_content_type'
-				)),
 				'lang' => Jelly::field('BelongsTo', array(
 					'foreign' => 'system_lang',
 					'model' => 'system_lang'
@@ -35,7 +31,6 @@ class Model_Page_Content extends Jelly_Model {
 			))
 			->load_with(array(
 				'page',
-				'type',
 				'lang',
 			));
 	}

@@ -28,23 +28,30 @@ class Model_Page extends Jelly_Model_MPTT {
 					'allow_null'    => TRUE,
 					'convert_empty' => TRUE,
 				)),
+				'type' => Jelly::field('BelongsTo', array(
+					'foreign' => 'page_type',
+					'model'   => 'page_type'
+				)),
 				'alias' => Jelly::field('String', array(
-					'default' => NULL,
-					'allow_null' => TRUE,
+					'default'       => NULL,
+					'allow_null'    => TRUE,
 					'convert_empty' => TRUE,
 				)),
 				'date_create' => Jelly::field('Timestamp', array(
 					'default' => time(),
 				)),
 				'is_active' => Jelly::field('Boolean', array(
-					'default' => TRUE,
-					'label' => 'Опубликовано',
-					'label_true' => 'да',
+					'default'     => TRUE,
+					'label'       => 'Опубликовано',
+					'label_true'  => 'да',
 					'label_false' => 'нет'
 				)),
 				'page_contents' => Jelly::field('HasMany'),
 			))
-			->load_with(array('parent_page'))
+			->load_with(array(
+				'parent_page',
+				'type'
+			))
 		;
 
 		parent::initialize($meta);
