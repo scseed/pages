@@ -24,7 +24,7 @@ $static_pages = ($pages) ? '('.implode('|', $pages).')' : '';
 Route::set('page',	'(<lang>)(/)<page_alias>(/<subpages>)', array(
 		'lang'       => $langs,
 		'page_alias' => $static_pages,
-		'subpages'   => '.*'
+		'subpages'   => '[\w/-]+'
 	))
 	->defaults(array(
 		'controller' => 'page',

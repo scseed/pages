@@ -20,42 +20,65 @@ abstract class Controller_Page_Core extends Controller_Template {
 	 */
 	public function action_show()
 	{
-		$page = $this->_find_page_content(I18n::lang());
+		$this->_pages_config = Kohana::config('pages');
+		$lang   = ($this->_pages_config->multilang_in_structure AND Arr::get($_GET, 'lang', NULL))
+			? Arr::get($_GET, 'lang', NULL)
+			: I18n::lang();
 
-		if( ! $page->loaded())
-			$page = $this->_find_page_content('ru');
+		$page_contents = $this->_find_page_content($this->_pages_config->multilang_in_structure);
 
-		if( ! $page->loaded())
+		if( ! count($page_contents))
 			throw new HTTP_Exception_404();
 
-		$page_view = ($this->_ajax) ? 'home/page' : 'page';
+		$page = Arr::get($page_contents, $lang, $this->_pages_config->default_language);
+
+		unset($page_contents[$page->lang->abbr]);
 
 		$this->template->title      = $page->title;
 		$this->template->page_title = ($page->long_title) ? $page->long_title : $page->title;
-		$this->template->content    = View::factory($this->_content_folder . $page_view)
-			->bind('page', $page);
+		$this->template->content    = View::factory($this->_content_folder . 'page')
+			->bind('page_contents', $page_contents)
+			->bind('page', $page)
+			->bind('multilang_in_structure', $this->_pages_config->multilang_in_structure);
 	}
 
 	/**
-	 * Looking for page content.
+	 * Looking for page contents.
 	 *
 	 * @throws HTTP_Exception_404
-	 * @param string $lang
-	 * @return Jelly_Model
+	 * @param  bool   $multilang_in_structure
+	 * @return null|array
 	 */
-	protected function _find_page_content($lang)
+	protected function _find_page_content($multilang_in_structure = FALSE)
 	{
-		$page_alias      = $this->request->param('page_alias');
+		$root_alias      = $this->request->param('page_alias');
 	    $subpage_aliases = $this->request->param('subpages');
+		$route_lang      = ($multilang_in_structure)
+			? $this->request->param('lang')
+			: $this->_pages_config->default_language;
 
-		if($page_alias === NULL)
-			throw new HTTP_Exception_404('No page_alias was given');
+		$page_route      = array($route_lang, $root_alias);
+		$subpage_aliases = ($subpage_aliases)
+			? explode('/', $subpage_aliases)
+			: array();
 
-		$alias = ($subpage_aliases) ?  $page_alias.'/'.$subpage_aliases : $page_alias;
+		$page_route = Arr::merge($page_route, $subpage_aliases);
 
-		$page = Jelly::query('page_content')->get_page_content($lang, $alias)->select();
+		if( ! $root_alias)
+			throw new HTTP_Exception_404('No valid page alias was given');
 
-		return $page;
+		$alias_hash = sha1(serialize($page_route));
+
+		$raw_page_contents = Jelly::query('page_content')->get_page_content($alias_hash)->select();
+
+		$page_contents = NULL;
+
+		foreach($raw_page_contents as $page_content)
+		{
+			$page_contents[$page_content->lang->abbr] = $page_content;
+		}
+
+		return $page_contents;
 	}
 
 	/**

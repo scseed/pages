@@ -37,6 +37,11 @@ class Model_Page extends Jelly_Model_MPTT {
 					'allow_null'    => TRUE,
 					'convert_empty' => TRUE,
 				)),
+				'full_alias_hash' => Jelly::field('String', array(
+					'rules' => array(
+						array('not_empty'),
+					),
+				)),
 				'date_create' => Jelly::field('Timestamp', array(
 					'default' => time(),
 				)),
