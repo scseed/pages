@@ -6,7 +6,7 @@
  * @package Pages
  * @author Sergei Gladkovskiy <smgladkovskiy@gmail.com>
  */
-class Model_Page_Content_Type extends Jelly_Model {
+class Model_Page_Type extends Jelly_Model {
 
 	/**
 	 * Initializating model meta information
@@ -15,7 +15,7 @@ class Model_Page_Content_Type extends Jelly_Model {
 	 */
 	public static function initialize(Jelly_Meta $meta)
 	{
-		$meta->table('page_content_types')
+		$meta->table('page_types')
 			->fields(array(
 				'id' => Jelly::field('Primary'),
 				'name' => Jelly::field('String'),
