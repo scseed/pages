@@ -63,31 +63,4 @@ abstract class Controller_Page_Core extends Controller_Template {
 		return $page;
 	}
 
-	/**
-	 * Getting system languages
-	 *
-	 * @static
-	 * @return array|null|string
-	 */
-	public static function langs()
-	{
-		$config = Kohana::config('pages');
-
-		$langs = i18n::lang();
-		if($config->multilanguage === TRUE)
-		{
-			// Load language conf
-			$_langs = Jelly::query('system_lang')->active()->select();
-			$langs = array();
-			foreach($_langs as $lang)
-			{
-				$langs[] = $lang->abbr;
-			}
-
-			$langs = ($langs) ? '('.implode('|', $langs).')' : NULL;
-		}
-
-		return $langs;
-	}
-
 } // End Controller_Page_Core

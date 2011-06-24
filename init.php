@@ -7,7 +7,7 @@ $textile = new Textile();
 View::bind_global('textile', $textile);
 
 // Load language conf
-$langs = Controller_Page::langs();
+$langs = Page::instance()->system_langs();
 
 // Load top-level pages
 $_pages = Jelly::query('page')->get_grand_pages()->select();
