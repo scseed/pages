@@ -11,6 +11,13 @@ abstract class Controller_Page_Core extends Controller_Template {
 
 	protected $_content_folder = 'frontend/content/';
 
+	public function before()
+	{
+		$this->_config = Kohana::config('pages');
+		View::set_global('multilang_in_structure', $this->_config->multilanguage_in_structure);
+		parent::before();
+	}
+
 	/**
 	 * Showing static page content by it's alias
 	 *
@@ -20,20 +27,28 @@ abstract class Controller_Page_Core extends Controller_Template {
 	 */
 	public function action_show()
 	{
-		$page = $this->_find_page_content(I18n::lang());
+		$lang_in_get  = Arr::get($_GET, 'lang', NULL);
+		$lang         = ($lang_in_get) ? $lang_in_get : I18n::lang();
+		$page_content = $this->_find_page_content($lang);
 
-		if( ! $page->loaded())
-			$page = $this->_find_page_content('ru');
+		if( ! $page_content->loaded() AND $this->_config->multilanguage_in_structure === FALSE)
+			$page_content = $this->_find_page_content('ru');
 
-		if( ! $page->loaded())
+		if( ! $page_content->loaded())
 			throw new HTTP_Exception_404();
 
 		$page_view = ($this->_ajax) ? 'home/page' : 'page';
 
-		$this->template->title      = $page->title;
-		$this->template->page_title = ($page->long_title) ? $page->long_title : $page->title;
+		$other_page_languages = Jelly::query('page_content')
+			->where('page', '=', $page_content->page->id)
+			->where('lang', '!=', $page_content->lang->id)
+			->select();
+
+		$this->template->title      = $page_content->title;
+		$this->template->page_title = ($page_content->long_title) ? $page_content->long_title : $page_content->title;
 		$this->template->content    = View::factory($this->_content_folder . $page_view)
-			->bind('page', $page);
+			->bind('page', $page_content)
+			->bind('other_page_languages', $other_page_languages);
 	}
 
 	/**
@@ -45,17 +60,58 @@ abstract class Controller_Page_Core extends Controller_Template {
 	 */
 	protected function _find_page_content($lang)
 	{
-		$page_alias      = $this->request->param('page_alias');
-	    $subpage_aliases = $this->request->param('subpages');
+		$page_path = HTML::chars($this->request->param('page_path'));
 
-		if($page_alias === NULL)
-			throw new HTTP_Exception_404('No page_alias was given');
+		$page_aliases = explode('/', $page_path);
 
-		$alias = ($subpage_aliases) ?  $page_alias.'/'.$subpage_aliases : $page_alias;
+		$pages_array = Page::instance()->pages_structure();
 
-		$page = Jelly::query('page_content')->get_page_content($lang, $alias)->select();
+		$current_page = $this->_find_current_page($pages_array, $page_aliases);
 
-		return $page;
+		$current_page = Jelly::query('page_content')
+			->get_page_content($lang, $current_page['id'])
+			->select();
+
+		return $current_page;
+	}
+
+	/**
+	 * Finds page id based on page path array
+	 * 
+	 * @recursive
+	 * @throws HTTP_Exception_404
+	 * @param $pages_array
+	 * @param $page_alias
+	 * @return null
+	 */
+	protected function _find_current_page($pages_array, $page_alias)
+	{
+		$alias_path = array_shift($page_alias);
+
+		if($alias_path !== NULL)
+		{
+			$current_page = NULL;
+
+			foreach($pages_array as $id => $page)
+			{
+				if($page['alias'] == $alias_path)
+				{
+					$current_page = $page;
+					break;
+				}
+			}
+
+			if($current_page !== NULL AND $current_page['childrens'] AND $page_alias)
+			{
+				$current_page = $this->_find_current_page($current_page['childrens'], $page_alias);
+			}
+			elseif($current_page !== NULL AND $page_alias)
+			{
+				throw new HTTP_Exception_404('Page is not found');
+			}
+		}
+
+		return $current_page;
 	}
 
 } // End Controller_Page_Core

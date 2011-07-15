@@ -22,6 +22,8 @@ abstract class Page_Core {
 	 */
 	public static $system_languages = NULL;
 
+	public static $pages_array = NULL;
+
 	/**
 	 * Instance initialization
 	 *
@@ -61,6 +63,49 @@ abstract class Page_Core {
 		$langs = ($langs) ? '('.implode('|', $langs).')' : NULL;
 
 		return $langs;
+	}
+
+	/**
+	 * Getting pages structure array
+	 * 
+	 * @return null|array
+	 */
+	public function pages_structure()
+	{
+		if(self::$pages_array === NULL)
+		{
+			$pages_root = Jelly::query('page')
+				->where('parent_page', '=', NULL)
+				->where('is_active', '=', FALSE)
+				->where('left', '=', 1)
+				->limit(1)
+				->select();
+
+			$pages = $pages_root->descendants()->as_array();
+
+			$pages_array = array();
+			$ref         = array();
+			foreach($pages as $page )
+			{
+				$page['childrens'] = array();
+				if(isset($ref[$page['parent_page']])) // we have a reference on its parent
+				{
+					$ref[ $page['parent_page'] ]['childrens'][ $page['id'] ] = $page;
+					$ref[ $page['id'] ] = &$ref[ $page['parent_page'] ]['childrens'][ $page['id'] ];
+				}
+				else// we don't have a reference on its parent => put it a root level
+				{
+					$pages_array[ $page['id'] ] = $page;
+					$ref[ $page['id'] ] = &$pages_array[ $page['id'] ];
+				}
+			}
+
+			unset($ref);
+
+			self::$pages_array = $pages_array;
+		}
+
+		return self::$pages_array;
 	}
 
 	/**

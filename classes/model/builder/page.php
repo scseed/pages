@@ -26,16 +26,4 @@ class Model_Builder_Page extends Jelly_Builder {
 			->limit(1);
 	}
 
-	/**
-	 * Grand pages selection
-	 *
-	 * @return Jelly_Builder
-	 */
-	public function get_grand_pages()
-	{
-		return $this
-			->active()
-			->where('parent_page', '=', 1);
-	}
-
 } // End Model_Builder_Page

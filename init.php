@@ -10,21 +10,20 @@ View::bind_global('textile', $textile);
 $langs = Page::instance()->system_langs();
 
 // Load top-level pages
-$_pages = Jelly::query('page')->get_grand_pages()->select();
+$_pages = Page::instance()->pages_structure();
 
 $pages = array();
-foreach($_pages as $page)
+foreach($_pages as $id => $page)
 {
-	$pages[] = $page->alias;
+	$pages[] = $page['alias'];
 }
 
 $static_pages = ($pages) ? '('.implode('|', $pages).')' : '';
 
 // Pages route
-Route::set('page',	'(<lang>)(/)<page_alias>(/<subpages>)', array(
+Route::set('page',	'(<lang>/)<page_path>', array(
 		'lang'       => $langs,
-		'page_alias' => $static_pages,
-		'subpages'   => '.*'
+		'page_path' => $static_pages.'(.*)'
 	))
 	->defaults(array(
 		'controller' => 'page',

@@ -2,4 +2,5 @@
 
 return array(
 	'multilanguage' => TRUE,
+	'multilanguage_in_structure' => FALSE,
 );
