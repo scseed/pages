@@ -20,6 +20,7 @@ class Model_Page extends Jelly_Model_MPTT {
 			->name_key('alias')
 			->fields(array(
 				'id' => Jelly::field('Primary'),
+
 				'parent_page' => Jelly::field('BelongsTo', array(
 					'foreign'       => 'page',
 					'column'        => 'parent_id',
@@ -28,17 +29,75 @@ class Model_Page extends Jelly_Model_MPTT {
 					'allow_null'    => TRUE,
 					'convert_empty' => TRUE,
 				)),
-				'type' => Jelly::field('BelongsTo', array(
+				'type'        => Jelly::field('BelongsTo', array(
 					'foreign' => 'page_type',
 					'model'   => 'page_type'
 				)),
-				'alias' => Jelly::field('String', array(
+				'creator'     => Jelly::field('BelongsTo', array(
+					'foreign' => 'user',
 					'default'       => NULL,
 					'allow_null'    => TRUE,
 					'convert_empty' => TRUE,
 				)),
+				'updater'     => Jelly::field('BelongsTo', array(
+					'foreign' => 'user',
+					'default'       => NULL,
+					'allow_null'    => TRUE,
+					'convert_empty' => TRUE,
+				)),
+
+				'page_contents' => Jelly::field('HasMany'),
+
+				'alias'      => Jelly::field('String', array(
+					'default'       => NULL,
+					'allow_null'    => TRUE,
+					'convert_empty' => TRUE,
+				)),
+				'route_name' => Jelly::field('String', array(
+					'default' => 'default'
+				)),
+				'directory'  => Jelly::field('String', array(
+					'default'       => NULL,
+					'allow_null'    => TRUE,
+					'convert_empty' => TRUE,
+				)),
+				'controller' => Jelly::field('String', array(
+					'default'       => NULL,
+					'allow_null'    => TRUE,
+					'convert_empty' => TRUE,
+				)),
+				'action'     => Jelly::field('String', array(
+					'default'       => NULL,
+					'allow_null'    => TRUE,
+					'convert_empty' => TRUE,
+				)),
+				'params'     => Jelly::field('Serialized', array(
+					'default'       => NULL,
+					'allow_null'    => TRUE,
+					'convert_empty' => TRUE,
+				)),
+				'query'      => Jelly::field('String', array(
+					'default'       => NULL,
+					'allow_null'    => TRUE,
+					'convert_empty' => TRUE,
+				)),
+				'class'      => Jelly::field('String', array(
+					'default'       => NULL,
+					'allow_null'    => TRUE,
+					'convert_empty' => TRUE,
+				)),
+
 				'date_create' => Jelly::field('Timestamp', array(
-					'default' => time(),
+					'auto_now_create' => TRUE,
+				)),
+				'date_update' => Jelly::field('Timestamp', array(
+					'auto_now_update' => TRUE,
+				)),
+
+				'is_visible'   => Jelly::field('Boolean', array(
+					'default'     => TRUE,
+					'true_label'  => __('виден'),
+					'false_label' => __('не виден'),
 				)),
 				'is_active' => Jelly::field('Boolean', array(
 					'default'     => TRUE,
@@ -46,11 +105,12 @@ class Model_Page extends Jelly_Model_MPTT {
 					'label_true'  => 'да',
 					'label_false' => 'нет'
 				)),
-				'page_contents' => Jelly::field('HasMany'),
 			))
 			->load_with(array(
 				'parent_page',
-				'type'
+				'type',
+				'creator',
+				'updater',
 			))
 		;
 
