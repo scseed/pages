@@ -19,6 +19,24 @@ class Model_Page_Type extends Jelly_Model {
 			->fields(array(
 				'id' => Jelly::field('Primary'),
 				'name' => Jelly::field('String'),
+				'route_name' => Jelly::field('String', array(
+					'default' => 'default'
+				)),
+				'directory'  => Jelly::field('String', array(
+					'default'       => NULL,
+					'allow_null'    => TRUE,
+					'convert_empty' => TRUE,
+				)),
+				'controller' => Jelly::field('String', array(
+					'default'       => NULL,
+					'allow_null'    => TRUE,
+					'convert_empty' => TRUE,
+				)),
+				'action'     => Jelly::field('String', array(
+					'default'       => NULL,
+					'allow_null'    => TRUE,
+					'convert_empty' => TRUE,
+				)),
 			));
 	}
 } // End Model_Page_Content_Type

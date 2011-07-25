@@ -97,14 +97,14 @@ abstract class Page_Core {
 			$ref         = array();
 			foreach($pages as $page )
 			{
-				$route          = Route::get($page['route_name']);
+				$route          = Route::get($page[':type:route_name']);
 				$route_defaults = $route->get_defaults();
-				$directory  = ($page['directory'])  ? $page['directory']         : Arr::get($route_defaults, 'directory', NULL);
-				$controller = ($page['controller']) ? $page['controller']        : $route_defaults['controller'];
-				$action     = ($page['action'])     ? $page['action']            : $route_defaults['action'];
+				$directory  = ($page[':type:directory'])  ? $page[':type:directory']         : Arr::get($route_defaults, 'directory', NULL);
+				$controller = ($page[':type:controller']) ? $page[':type:controller']        : $route_defaults['controller'];
+				$action     = ($page[':type:action'])     ? $page[':type:action']            : $route_defaults['action'];
 				$params     = ($page['params'])     ? $page['params']            : NULL;
 				$query      = ($page['query'])      ? $page['query']             : NULL;
-				$key        = implode('_', array($page['route_name'], $directory, $controller, $action, $params, $query));
+				$key        = implode('_', array($page[':type:route_name'], $directory, $controller, $action, $params, $query));
 
 				if($key == 'page__page_show_a:1:{s:9:"page_path";s:4:"home";}_')
 					$key = 'default__home_index__';

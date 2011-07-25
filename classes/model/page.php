@@ -53,24 +53,6 @@ class Model_Page extends Jelly_Model_MPTT {
 					'allow_null'    => TRUE,
 					'convert_empty' => TRUE,
 				)),
-				'route_name' => Jelly::field('String', array(
-					'default' => 'default'
-				)),
-				'directory'  => Jelly::field('String', array(
-					'default'       => NULL,
-					'allow_null'    => TRUE,
-					'convert_empty' => TRUE,
-				)),
-				'controller' => Jelly::field('String', array(
-					'default'       => NULL,
-					'allow_null'    => TRUE,
-					'convert_empty' => TRUE,
-				)),
-				'action'     => Jelly::field('String', array(
-					'default'       => NULL,
-					'allow_null'    => TRUE,
-					'convert_empty' => TRUE,
-				)),
 				'params'     => Jelly::field('Serialized', array(
 					'default'       => NULL,
 					'allow_null'    => TRUE,
