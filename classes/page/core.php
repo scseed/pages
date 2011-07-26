@@ -88,6 +88,7 @@ abstract class Page_Core {
 				->where('parent_page', '=', NULL)
 				->where('is_active', '=', FALSE)
 				->where('left', '=', 1)
+				->where('alias', '=', $lang)
 				->limit(1)
 				->select();
 
@@ -112,7 +113,9 @@ abstract class Page_Core {
 				$page['key'] = $key;
 
 				$page['title'] = $content[$page['id']][$lang]->title;
-				$page['anchor_title'] = $content[$page['id']][$lang]->long_title;
+				$page['anchor_title'] = ($content[$page['id']][$lang]->long_title)
+					? $content[$page['id']][$lang]->long_title
+					: $content[$page['id']][$lang]->title;
 
 				$page['childrens'] = array();
 				if(isset($ref[$page['parent_page']])) // we have a reference on its parent
