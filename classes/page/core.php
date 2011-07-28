@@ -22,7 +22,8 @@ abstract class Page_Core {
 	 */
 	public static $system_languages = NULL;
 
-	public static $pages_array = NULL;
+	public static $pages_array = array();
+	public static $pages_array_all = array();
 
 	/**
 	 * Instance initialization
@@ -70,29 +71,59 @@ abstract class Page_Core {
 	 * 
 	 * @return null|array
 	 */
-	public function pages_structure()
+	public function pages_structure($multiple_roots = FALSE, $lang = NULL)
 	{
-		if(self::$pages_array === NULL)
+		$type = NULL;
+		switch($multiple_roots)
 		{
-			$lang = I18n::lang();
+			case FALSE:
+				$pages_arr = Arr::get(self::$pages_array, $lang);
+				$type = 'pages_array';
+				break;
+			case TRUE:
+				$pages_arr = Arr::get(self::$pages_array_all, $lang);
+				$type = 'pages_array_all';
+				break;
+		}
+
+		if($pages_arr === NULL)
+		{
+			$lang = ($lang) ? $lang : I18n::lang();
+			$default_lang = I18n::lang();
 			$pages_content = Jelly::query('page_content')
 				->select();
 
+//			exit(Debug::vars($lang) . View::factory('profiler/stats'));
 			$content = array();
 			foreach($pages_content as $page_content)
 			{
 				$content[$page_content->page->id][$page_content->lang->abbr] = $page_content;
 			}
 
-			$pages_root = Jelly::query('page')
+			$pages_roots = Jelly::query('page')
 				->where('parent_page', '=', NULL)
 				->where('is_active', '=', FALSE)
-				->where('left', '=', 1)
-				->where('alias', '=', $lang)
-				->limit(1)
-				->select();
+				->where('left', '=', 1);
 
-			$pages = $pages_root->descendants()->as_array();
+			if( ! $multiple_roots)
+			{
+				$pages_roots = $pages_roots->where('alias', '=', $lang)->limit(1);
+			}
+
+			$pages_roots = $pages_roots->select();
+
+			$pages = array();
+			if(! $multiple_roots)
+			{
+				$pages = $pages_roots->descendants()->as_array();
+			}
+			else
+			{
+				foreach($pages_roots as $pages_root_node)
+				{
+					$pages = array_merge($pages, $pages_root_node->descendants(TRUE)->as_array());
+				}
+			}
 
 			$pages_array = array();
 			$ref         = array();
@@ -112,10 +143,30 @@ abstract class Page_Core {
 
 				$page['key'] = $key;
 
-				$page['title'] = $content[$page['id']][$lang]->title;
-				$page['anchor_title'] = ($content[$page['id']][$lang]->long_title)
-					? $content[$page['id']][$lang]->long_title
-					: $content[$page['id']][$lang]->title;
+				$_content = Arr::get($content, $page['id'], NULL);
+				$_lang_content = Arr::get($_content, $lang, NULL);
+				if( ! $_lang_content)
+				{
+					$_lang_content = Arr::get($_content, $default_lang, NULL);
+				}
+
+				if( ! $_lang_content)
+				{
+					$_lang_content = Arr::get($_content, $page[':parent_page:alias'], NULL);
+				}
+
+				$page['title'] = ($_lang_content) ? $_lang_content->title : $page['alias'];
+
+				if($_lang_content)
+				{
+					$page['anchor_title'] = ($_lang_content->long_title)
+					? $_lang_content->long_title
+					: $_lang_content->title;
+				}
+				else
+				{
+					$page['anchor_title'] = NULL;
+				}
 
 				$page['childrens'] = array();
 				if(isset($ref[$page['parent_page']])) // we have a reference on its parent
@@ -132,10 +183,10 @@ abstract class Page_Core {
 
 			unset($ref);
 
-			self::$pages_array = $pages_array;
+			self::${$type}[$lang] = $pages_array;
 		}
 
-		return self::$pages_array;
+		return self::${$type}[$lang];
 	}
 
 	/**
