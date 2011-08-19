@@ -54,7 +54,6 @@ abstract class Page_Core {
 			$this->_load_system_languages();
 		}
 
-
 		$langs = NULL;
 		foreach(self::$system_languages as $lang)
 		{
@@ -69,7 +68,9 @@ abstract class Page_Core {
 	/**
 	 * Getting pages structure array
 	 * 
-	 * @return null|array
+	 * @param bool        $multiple_roots
+	 * @param string|null $lang
+	 * @return array|null
 	 */
 	public function pages_structure($multiple_roots = FALSE, $lang = NULL)
 	{
