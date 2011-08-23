@@ -49,9 +49,13 @@ class Model_Page extends Jelly_Model_MPTT {
 				'page_contents' => Jelly::field('HasMany'),
 
 				'alias'      => Jelly::field('String', array(
+					'label' => __('Алиас'),
 					'default'       => NULL,
 					'allow_null'    => TRUE,
 					'convert_empty' => TRUE,
+					'rules' => array(
+						array('alpha_dash')
+					)
 				)),
 				'params'     => Jelly::field('Serialized', array(
 					'default'       => NULL,

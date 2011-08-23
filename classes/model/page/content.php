@@ -27,7 +27,12 @@ class Model_Page_Content extends Jelly_Model {
 				)),
 				'title' => Jelly::field('String'),
 				'long_title' => Jelly::field('String'),
-				'content' => Jelly::field('Text'),
+				'content' => Jelly::field('Text', array(
+						'label' => __('Содержание страницы'),
+						'rules' => array(
+							array('not_empty'),
+						)
+					)),
 			))
 			->load_with(array(
 				'page',
