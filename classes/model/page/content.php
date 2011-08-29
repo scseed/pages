@@ -33,6 +33,9 @@ class Model_Page_Content extends Jelly_Model {
 							array('not_empty'),
 						)
 					)),
+				'is_active' => Jelly::field('Boolean', array(
+						'default' => TRUE,
+					))
 			))
 			->load_with(array(
 				'page',

@@ -67,7 +67,7 @@ abstract class Page_Core {
 
 	/**
 	 * Getting pages structure array
-	 * 
+	 *
 	 * @param bool        $multiple_roots
 	 * @param string|null $lang
 	 * @return array|null
@@ -92,9 +92,9 @@ abstract class Page_Core {
 			$lang = ($lang) ? $lang : I18n::lang();
 			$default_lang = I18n::lang();
 			$pages_content = Jelly::query('page_content')
+				->active()
 				->select();
 
-//			exit(Debug::vars($lang) . View::factory('profiler/stats'));
 			$content = array();
 			foreach($pages_content as $page_content)
 			{
