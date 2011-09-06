@@ -72,7 +72,7 @@ abstract class Page_Core {
 	 * @param string|null $lang
 	 * @return array|null
 	 */
-	public function pages_structure($multiple_roots = FALSE, $lang = NULL)
+	public function pages_structure($multiple_roots = TRUE, $lang = NULL)
 	{
 		$type = NULL;
 		switch($multiple_roots)

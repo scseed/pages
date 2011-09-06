@@ -8,7 +8,6 @@ View::bind_global('textile', $textile);
 
 // Load language conf
 $langs = Page::instance()->system_langs();
-
 // Pages route
 Route::set('page',	'(<lang>/)<page_path>', array(
 		'lang'       => &$langs,
@@ -23,12 +22,22 @@ Route::set('page',	'(<lang>/)<page_path>', array(
 // Load top-level pages
 $_pages = Page::instance()->pages_structure();
 
+$multilang = (strlen($langs) > 4);
 $pages = array();
 foreach($_pages as $id => $page)
 {
-	$pages[] = $page['alias'];
+	if($multilang)
+	{
+		foreach($page['childrens'] as $id => $subpage)
+		{
+			$pages[$subpage['alias']] = $subpage['alias'];
+		}
+	}
+	else
+	{
+		$pages[] = $page['alias'];
+	}
 }
-
 $static_pages = ($pages) ? '('.implode('|', $pages).')(.*)' : '(.*)';
 
 // Pages route

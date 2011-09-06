@@ -29,6 +29,7 @@ abstract class Controller_Page_Core extends Controller_Template {
 	{
 		$lang_in_get  = Arr::get($_GET, 'lang', NULL);
 		$lang         = ($lang_in_get) ? $lang_in_get : I18n::lang();
+
 		$page_content = $this->_find_page_content($lang);
 
 		if( ! $page_content->loaded() AND $this->_config->multilanguage_in_structure === FALSE)
@@ -64,7 +65,7 @@ abstract class Controller_Page_Core extends Controller_Template {
 
 		$page_aliases = explode('/', $page_path);
 
-		$pages_array = Page::instance()->pages_structure();
+		$pages_array = Page::instance()->pages_structure(FALSE, $lang);
 
 		$current_page = $this->_find_current_page($pages_array, $page_aliases);
 
@@ -77,7 +78,7 @@ abstract class Controller_Page_Core extends Controller_Template {
 
 	/**
 	 * Finds page id based on page path array
-	 * 
+	 *
 	 * @recursive
 	 * @throws HTTP_Exception_404
 	 * @param $pages_array
