@@ -92,38 +92,59 @@ abstract class Page_Core {
 			$lang = ($lang) ? $lang : I18n::lang();
 			$default_lang = I18n::lang();
 			$pages_content = Jelly::query('page_content')
+				->select_column(array('id', 'page', 'system_lang.abbr', 'title', 'long_title'))
+				->join('system_lang', 'LEFT')
+					->on('system_lang.id', '=', 'lang')
 				->active()
-				->select();
+				->select()
+				->as_array()
+			;
 
 			$content = array();
 			foreach($pages_content as $page_content)
 			{
-				$content[$page_content->page->id][$page_content->lang->abbr] = $page_content;
+				$content[$page_content['page_id']][$page_content['abbr']] = $page_content;
 			}
 
-			$pages_roots = Jelly::query('page')
-				->where('parent_page', '=', NULL)
-				->where('is_active', '=', FALSE)
-				->where('left', '=', 1);
+//			$pages_roots = Jelly::query('page')
+//				->where('parent_page', '=', NULL)
+//				->where('left', '=', 1)
+//				->active(FALSE);
+//
+//			if( ! $multiple_roots)
+//			{
+//				$pages_roots = $pages_roots->where('alias', '=', $lang)->limit(1);
+//			}
+//
+//			$pages_roots = $pages_roots->select();
+//
+//			$pages = array();
+//			if(! $multiple_roots)
+//			{
+//				$pages = $pages_roots->descendants()->as_array();
+//			}
+//			else
+//			{
+//				foreach($pages_roots as $pages_root_node)
+//				{
+//					$pages = array_merge($pages, $pages_root_node->descendants(TRUE)->as_array());
+//				}
+//			}
 
-			if( ! $multiple_roots)
+			if($multiple_roots)
 			{
-				$pages_roots = $pages_roots->where('alias', '=', $lang)->limit(1);
-			}
-
-			$pages_roots = $pages_roots->select();
-
-			$pages = array();
-			if(! $multiple_roots)
-			{
-				$pages = $pages_roots->descendants()->as_array();
+				$pages = Jelly::query('page')->select()->as_array();
 			}
 			else
 			{
-				foreach($pages_roots as $pages_root_node)
-				{
-					$pages = array_merge($pages, $pages_root_node->descendants(TRUE)->as_array());
-				}
+				$pages_roots = Jelly::query('page')
+					->where('parent_page', '=', NULL)
+					->where('left', '=', 1)
+					->active(FALSE)
+					->where('alias', '=', $lang)
+					->limit(1)
+					->select();
+				$pages = $pages_roots->descendants()->as_array();
 			}
 
 			$pages_array = array();
@@ -156,13 +177,13 @@ abstract class Page_Core {
 					$_lang_content = Arr::get($_content, $page[':parent_page:alias'], NULL);
 				}
 
-				$page['title'] = ($_lang_content) ? $_lang_content->title : $page['alias'];
+				$page['title'] = ($_lang_content) ? $_lang_content['title'] : $page['alias'];
 
 				if($_lang_content)
 				{
-					$page['anchor_title'] = ($_lang_content->long_title)
-					? $_lang_content->long_title
-					: $_lang_content->title;
+					$page['anchor_title'] = ($_lang_content['long_title'])
+					? $_lang_content['long_title']
+					: $_lang_content['title'];
 				}
 				else
 				{

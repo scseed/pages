@@ -95,8 +95,8 @@ class Model_Page extends Jelly_Model_MPTT {
 			->load_with(array(
 				'parent_page',
 				'type',
-				'creator',
-				'updater',
+//				'creator',
+//				'updater',
 			))
 		;
 

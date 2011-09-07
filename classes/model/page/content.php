@@ -37,9 +37,10 @@ class Model_Page_Content extends Jelly_Model {
 						'default' => TRUE,
 					))
 			))
-			->load_with(array(
-				'page',
-				'lang',
-			));
+//			->load_with(array(
+//				'page',
+//				'lang',
+//			))
+		;
 	}
 } // End Model_Page_Content
