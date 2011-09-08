@@ -106,45 +106,29 @@ abstract class Page_Core {
 				$content[$page_content['page_id']][$page_content['abbr']] = $page_content;
 			}
 
-//			$pages_roots = Jelly::query('page')
-//				->where('parent_page', '=', NULL)
-//				->where('left', '=', 1)
-//				->active(FALSE);
-//
-//			if( ! $multiple_roots)
-//			{
-//				$pages_roots = $pages_roots->where('alias', '=', $lang)->limit(1);
-//			}
-//
-//			$pages_roots = $pages_roots->select();
-//
-//			$pages = array();
-//			if(! $multiple_roots)
-//			{
-//				$pages = $pages_roots->descendants()->as_array();
-//			}
-//			else
-//			{
-//				foreach($pages_roots as $pages_root_node)
-//				{
-//					$pages = array_merge($pages, $pages_root_node->descendants(TRUE)->as_array());
-//				}
-//			}
+			$pages_roots = Jelly::query('page')
+				->where('parent_page', '=', NULL)
+				->where('left', '=', 1)
+				->active(FALSE);
 
-			if($multiple_roots)
+			if( ! $multiple_roots)
 			{
-				$pages = Jelly::query('page')->select()->as_array();
+				$pages_roots = $pages_roots->where('alias', '=', $lang)->limit(1);
+			}
+
+			$pages_roots = $pages_roots->select();
+
+			$pages = array();
+			if(! $multiple_roots)
+			{
+				$pages = $pages_roots->descendants()->as_array();
 			}
 			else
 			{
-				$pages_roots = Jelly::query('page')
-					->where('parent_page', '=', NULL)
-					->where('left', '=', 1)
-					->active(FALSE)
-					->where('alias', '=', $lang)
-					->limit(1)
-					->select();
-				$pages = $pages_roots->descendants()->as_array();
+				foreach($pages_roots as $pages_root_node)
+				{
+					$pages = array_merge($pages, $pages_root_node->descendants(TRUE)->as_array());
+				}
 			}
 
 			$pages_array = array();
