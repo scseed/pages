@@ -108,7 +108,7 @@ abstract class Controller_Page_Core extends Controller_Template {
 			}
 			elseif($current_page !== NULL AND $page_alias)
 			{
-				throw new HTTP_Exception_404('Page is not found');
+				throw new HTTP_Exception_404(__('Page with page alias `:alias` was not found', array(':alias' => $page_alias)));
 			}
 		}
 
