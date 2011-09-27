@@ -217,7 +217,7 @@ abstract class Page_Core {
 	 */
 	protected function _load_system_languages()
 	{
-		$config = Kohana::config('pages');
+		$config = Kohana::$config->load('pages');
 
 		if($config->multilanguage === TRUE)
 		{

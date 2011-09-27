@@ -13,7 +13,7 @@ abstract class Controller_Page_Core extends Controller_Template {
 
 	public function before()
 	{
-		$this->_config = Kohana::config('pages');
+		$this->_config = Kohana::$config->load('pages');
 		View::set_global('multilang_in_structure', $this->_config->multilanguage_in_structure);
 		parent::before();
 	}
