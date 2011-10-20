@@ -72,7 +72,7 @@ abstract class Page_Core {
 	 * @param string|null $lang
 	 * @return array|null
 	 */
-	public function pages_structure($multiple_roots = TRUE, $lang = NULL)
+	public function pages_structure($multiple_roots = FALSE, $lang = NULL)
 	{
 		$type = NULL;
 		switch($multiple_roots)
@@ -140,8 +140,8 @@ abstract class Page_Core {
 				$directory  = ($page[':type:directory'])  ? $page[':type:directory']         : Arr::get($route_defaults, 'directory', NULL);
 				$controller = ($page[':type:controller']) ? $page[':type:controller']        : $route_defaults['controller'];
 				$action     = ($page[':type:action'])     ? $page[':type:action']            : $route_defaults['action'];
-				$params     = ($page['params'])     ? $page['params']            : NULL;
-				$query      = ($page['query'])      ? $page['query']             : NULL;
+				$params     = ($page['params'])           ? $page['params']                  : NULL;
+				$query      = ($page['query'])            ? $page['query']                   : NULL;
 				$key        = implode('_', array($page[':type:route_name'], $directory, $controller, $action, $params, $query));
 
 				if($key == 'page__page_show_a:1:{s:9:"page_path";s:4:"home";}_')
