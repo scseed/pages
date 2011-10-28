@@ -135,7 +135,16 @@ abstract class Page_Core {
 			$ref         = array();
 			foreach($pages as $page )
 			{
-				$route          = Route::get($page[':type:route_name']);
+				try
+				{
+					$route = Route::get($page[':type:route_name']);
+				}
+				catch(Kohana_Exception $e)
+				{
+					//skip path that has no page route
+					continue;
+				}
+
 				$route_defaults = $route->get_defaults();
 				$directory  = ($page[':type:directory'])  ? $page[':type:directory']         : Arr::get($route_defaults, 'directory', NULL);
 				$controller = ($page[':type:controller']) ? $page[':type:controller']        : $route_defaults['controller'];
