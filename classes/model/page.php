@@ -34,13 +34,13 @@ class Model_Page extends Jelly_Model_MPTT {
 					'model'   => 'page_type'
 				)),
 				'creator'     => Jelly::field('BelongsTo', array(
-					'foreign' => 'user',
+					'foreign'       => 'user',
 					'default'       => NULL,
 					'allow_null'    => TRUE,
 					'convert_empty' => TRUE,
 				)),
 				'updater'     => Jelly::field('BelongsTo', array(
-					'foreign' => 'user',
+					'foreign'       => 'user',
 					'default'       => NULL,
 					'allow_null'    => TRUE,
 					'convert_empty' => TRUE,

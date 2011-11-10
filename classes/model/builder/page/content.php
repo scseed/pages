@@ -20,8 +20,8 @@ class Model_Builder_Page_Content extends Jelly_Builder {
 		return $this
 			->with('lang')
 			->with('page')
-			->where('page_content:lang.abbr', '=', $lang)
-			->where('page_content:page.id', '=', $page_id)
+			->where(':lang.abbr', '=', $lang)
+			->where(':page.id', '=', $page_id)
 			->limit(1);
 	}
 

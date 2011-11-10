@@ -4,12 +4,12 @@
  * Template Controller Pages Core
  *
  * @package Pages
- * @uses Textile
  * @author Sergei Gladkovskiy <smgladkovskiy@gmail.com>
  */
 abstract class Controller_Page_Core extends Controller_Template {
 
 	protected $_content_folder = 'frontend/content/';
+	protected $_page_view      = 'page';
 
 	public function before()
 	{
@@ -36,18 +36,21 @@ abstract class Controller_Page_Core extends Controller_Template {
 			$page_content = $this->_find_page_content('ru');
 
 		if( ! $page_content->loaded())
-			throw new HTTP_Exception_404();
-
-		$page_view = ($this->_ajax) ? 'home/page' : 'page';
+		{
+			throw new HTTP_Exception_404(
+				'Page content with alias `:alias` was not found.',
+				array(':alias' => HTML::chars($this->request->param('page_path')))
+			);
+		}
 
 		$other_page_languages = Jelly::query('page_content')
-			->where('page', '=', $page_content->page->id)
+			->where('page', '=',  $page_content->page->id)
 			->where('lang', '!=', $page_content->lang->id)
 			->select();
 
 		$this->template->title      = $page_content->title;
 		$this->template->page_title = ($page_content->long_title) ? $page_content->long_title : $page_content->title;
-		$this->template->content    = View::factory($this->_content_folder . $page_view)
+		$this->template->content    = View::factory($this->_content_folder . $this->_page_view)
 			->bind('page', $page_content)
 			->bind('other_page_languages', $other_page_languages);
 	}
@@ -93,7 +96,7 @@ abstract class Controller_Page_Core extends Controller_Template {
 		{
 			$current_page = NULL;
 
-			foreach($pages_array as $id => $page)
+			foreach($pages_array as $page)
 			{
 				if($page['alias'] == $alias_path)
 				{
@@ -108,7 +111,10 @@ abstract class Controller_Page_Core extends Controller_Template {
 			}
 			elseif($current_page !== NULL AND $page_alias)
 			{
-				throw new HTTP_Exception_404(__('Page with page alias `:alias` was not found', array(':alias' => implode('/',$page_alias))));
+				throw new HTTP_Exception_404(
+					'Page with page alias `:alias` was not found',
+					array(':alias' => implode('/',$page_alias))
+				);
 			}
 		}
 
