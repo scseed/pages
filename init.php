@@ -32,7 +32,7 @@ foreach($_pages as $id => $page)
 		$pages[] = $page['alias'];
 	}
 }
-$static_pages = ($pages) ? '('.implode('|', $pages).')(.*)' : '(.*)';
+$static_pages = ($pages) ? '(?!error)('.implode('|', $pages).')(.*)' : '(?!error)(.*)';
 
 // Pages route
 Route::set('page',	'(<lang>/)<page_path>', array(
