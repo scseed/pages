@@ -48,7 +48,7 @@ abstract class Controller_Page_Core extends Controller_Template {
 			->where('lang', '!=', $page_content->lang->id)
 			->select();
 
-		$this->template->title      = $page_content->title;
+		$this->template->title      =
 		$this->template->page_title = ($page_content->long_title) ? $page_content->long_title : $page_content->title;
 		$this->template->content    = View::factory($this->_content_folder . $this->_page_view)
 			->bind('page', $page_content)

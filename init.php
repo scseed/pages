@@ -14,7 +14,7 @@ Route::set('page',	'(<lang>/)<page_path>', array(
 ));
 
 // Load top-level pages
-$_pages = Page::instance()->pages_structure();
+$_pages = Page::instance()->pages_structure(Kohana::$config->load('pages')->multilanguage_in_structure);
 
 $multilang = (strlen($langs) > 4);
 $pages = array();
@@ -35,7 +35,7 @@ foreach($_pages as $id => $page)
 $static_pages = ($pages) ? '(?!error)('.implode('|', $pages).')(.*)' : '(?!error)(.*)';
 
 // Pages route
-Route::set('page',	'(<lang>/)<page_path>', array(
+Route::set('page',	'(<lang>)/<page_path>', array(
 		'lang'       => $langs,
 		'page_path' => $static_pages
 	))
