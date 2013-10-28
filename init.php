@@ -8,7 +8,7 @@ Route::set('page',	'(<lang>/)<page_path>', array(
 		'page_path' => &$static_pages
 	))
 	->defaults(array(
-		'controller' => 'page',
+		'controller' => 'Page',
 		'action'     => 'show',
 		'lang'       => NULL,
 ));
@@ -35,12 +35,12 @@ foreach($_pages as $id => $page)
 $static_pages = ($pages) ? '(?!error)('.implode('|', $pages).')(.*)' : '(?!error)(.*)';
 
 // Pages route
-Route::set('page',	'(<lang>)/<page_path>', array(
-		'lang'       => $langs,
+Route::set('page',	'(<lang>/)<page_path>', array(
+		'lang'      => $langs,
 		'page_path' => $static_pages
 	))
 	->defaults(array(
-		'controller' => 'page',
+		'controller' => 'Page',
 		'action'     => 'show',
 		'lang'       => NULL,
 ));
